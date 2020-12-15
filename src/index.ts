@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { startService } from 'esbuild';
+import * as esbuild from 'esbuild';
 
 import type { Service, TransformOptions } from 'esbuild';
 import type { PreprocessorGroup, Processed } from 'svelte/types/compiler/preprocess';
@@ -31,8 +31,16 @@ interface ProcessorInput {
 
 // ---
 
+let decided = false;
 let service: Service | null;
-let boot = startService().then(x => { service = x });
+
+function isWatcher(): boolean {
+	const { ROLLUP_WATCH, WEBPACK_DEV_SERVER, CI, NODE_ENV } = process.env;
+
+	if (CI != null) return false;
+	if (ROLLUP_WATCH || WEBPACK_DEV_SERVER) return true;
+	return !/^(prod|test)/.test(NODE_ENV) && /^(dev|local)/.test(NODE_ENV);
+}
 
 function bail(err: Error, ...args: (string|number)[]): never {
 	console.error('[esbuild]', ...args);
@@ -43,7 +51,7 @@ function bail(err: Error, ...args: (string|number)[]): never {
 async function transform(input: ProcessorInput, options: TransformOptions): Promise<Processed> {
 	let config = { ...options };
 	if (input.filename) config.sourcefile = input.filename;
-	let output = await service.transform(input.content, config);
+	let output = await (service || esbuild).transform(input.content, config);
 
 	// TODO: log output.warnings
 	console.log(output.warnings);
@@ -59,7 +67,12 @@ function esbuilder(config: TransformOptions, typescript = false): PreprocessorGr
 
 	return {
 		async script(input) {
-			if (!service) await boot;
+			if (!decided) {
+				decided = true;
+				if (isWatcher()) {
+					service = await esbuild.startService();
+				}
+			}
 
 			let { lang } = input.attributes;
 			let isTypescript = (lang === 'ts' || lang === 'typescript');
