@@ -1,7 +1,7 @@
 import type { TransformOptions } from 'esbuild';
 import type { Preprocessor } from 'svelte/types/compiler/preprocess';
 
-export interface Options extends Omit<TransformOptions, 'logLevel'|'color'|'jsxFactory'|'jsxFragment'|'color'|'logLevel'|'errorLimit'> {
+export interface Options extends Omit<TransformOptions, 'logLevel'|'color'|'minify'|'jsxFactory'|'jsxFragment'|'color'|'logLevel'|'errorLimit'> {
 	/** @default 'tsconfig.json' */
 	tsconfig: string;
 	/** @default true */

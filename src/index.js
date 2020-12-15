@@ -53,9 +53,9 @@ export function typescript(options={}) {
 		charset: 'utf8',
 		logLevel: loglevel,
 		sourcemap: true,
-		minify: false,
 		...config,
 		loader: 'ts',
+		minify: false,
 		errorLimit: 0,
 	};
 
