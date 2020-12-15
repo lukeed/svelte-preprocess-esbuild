@@ -15,7 +15,7 @@
   "scripts": {
     "build": "node bin",
     "pretest": "tsc src/index.ts --noEmit",
-    "test": "uvu -r esm test -i fixtures"
+    "test": "uvu test -i \"register|fixtures\" -r test/register"
   },
   "engines": {
     "node": ">=10"
