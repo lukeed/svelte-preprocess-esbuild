@@ -78,6 +78,7 @@ export function typescript(options={}) {
 
 		if (contents.compilerOptions) {
 			config.tsconfigRaw = { compilerOptions: contents.compilerOptions };
+		} else if (contents || file) {
 			console.warn('[esbuild] Missing `compilerOptions` configuration – skip!');
 		}
 	}
