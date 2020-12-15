@@ -2,7 +2,7 @@
   "version": "0.0.0",
   "name": "svelte-preprocess-esbuild",
   "repository": "lukeed/svelte-preprocess-esbuild",
-  "description": "WIP",
+  "description": "A Svelte Preprocessor to compile TypeScript via esbuild",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
   "types": "index.d.ts",
@@ -47,6 +47,7 @@
   "keywords": [
     "esbuild",
     "preprocess",
+    "typescript",
     "svelte"
   ]
 }
