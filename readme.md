@@ -76,7 +76,26 @@ module.exports = {
 }
 ```
 
-## Options
+## API
+
+### typescript(options?)
+Returns: `PreprocessorGroup`
+
+Invoke `esbuild` on all `<script>` tags within your template that match any of the following:
+
+* a `lang="ts"` attribute
+* a `lang="typescript"` attribute
+* a `type="application/typescript"` attribute
+* a `type="text/typescript"` attribute
+* a `type="application/ts"` attribute
+* a `type="text/ts"` attribute
+* a non-external `src=""` attribute that ends with `.ts` extension
+
+Additionally, whenever `options.define` is given a value, **all** `<script>` tags will be subject to [replacements](https://esbuild.github.io/api/#define), _including non-TypeScript contents!_
+
+#### options
+Type: `Object`<br>
+Required: `false`
 
 A limited subset of [`esbuild.TransformOptions`](https://github.com/evanw/esbuild/blob/master/lib/types.ts#L126) is supported. These values are forced (for compatbility and/or reliability): `minify`, `loader`, `format`, and `errorLimit`.
 
@@ -86,7 +105,7 @@ Below is the _only_ option that this plugin adds:
 
 #### options.tsconfig
 Type: `string`<br>
-Required: `tsconfig.json`
+Default: `tsconfig.json`
 
 Load a TypeScript configuration file. When found, is passed to `esbuild` as its `tsconfigRaw` option.
 
@@ -94,6 +113,41 @@ When a value is given, an error will be thrown if the file cannot be found and/o
 
 By default, attempts to autoload `tsconfig.json`, but _will not_ throw if it's missing.
 
+
+### replace(dict)
+Returns: `PreprocessorGroup`
+
+Invoke `esbuild` on all non-TypeScript `<script>`s, applying any static [string replacements](https://esbuild.github.io/api/#define).
+
+> **Note:** This preprocessor will **ignore** TypeScript contents! <br>If you are using any TypeScript at all, you should be using the [`typescript` preprocessor](#typescriptoptions) with `options.define` instead.
+
+#### dict
+Type: `Object`
+
+Your dictionary of key-value replacement pairs, where keys are replaced by their values.
+
+> **Important:** All values ***must*** be stringified!
+
+```js
+// rollup.config.js
+import svelte from 'rollup-plugin-svelte';
+import { replace } from 'svelte-preprocess-esbuild';
+
+export default {
+  // ...
+  plugins: [
+    // ...
+    svelte({
+      preprocess: [
+        replace({
+          'process.browser': JSON.stringify(true),
+          'process.env.BASEURL': JSON.stringify('https://foobar.com/'),
+        })
+      ]
+    })
+  ]
+}
+```
 
 ## License
 
