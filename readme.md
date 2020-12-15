@@ -14,7 +14,7 @@ $ npm install svelte-preprocess-esbuild esbuild --save-dev
 
 ## Usage
 
-> You can use `svelte-preprocess-esbuild` anywhere you use `svelte-preprocess`!
+You can use `svelte-preprocess-esbuild` alongside `svelte-preprocess`!
 
 ***Example:*** `rollup.config.js`
 
