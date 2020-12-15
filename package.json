@@ -1,0 +1,52 @@
+{
+  "version": "0.0.0",
+  "name": "svelte-preprocess-esbuild",
+  "repository": "lukeed/svelte-preprocess-esbuild",
+  "description": "WIP",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "author": {
+    "name": "Luke Edwards",
+    "email": "luke.edwards05@gmail.com",
+    "url": "https://lukeed.com"
+  },
+  "scripts": {
+    "build": "node bin",
+    "pretest": "tsc src/index.ts --noEmit",
+    "test": "uvu -r esm test -i fixtures"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
+  "peerDependencies": {
+    "esbuild": ">=0.8.0",
+    "svelte": ">=3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "14.14.13",
+    "esbuild": "0.8.23",
+    "premove": "3.0.1",
+    "rewrite-imports": "2.0.3",
+    "svelte": "3.31.0",
+    "typescript": "4.1.3",
+    "uvu": "0.5.1"
+  },
+  "keywords": [
+    "esbuild",
+    "preprocess",
+    "svelte"
+  ]
+}

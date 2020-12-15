@@ -1,23 +1,48 @@
 import { resolve } from 'path';
 import { startService } from 'esbuild';
 
-/** @type {import('esbuild').Service} */let service;
+import type { Service, TransformOptions } from 'esbuild';
+import type { PreprocessorGroup, Processed } from 'svelte/types/compiler/preprocess';
+
+export type Definitions = {
+	[find: string]: string;
+}
+
+type Allow = Pick<TransformOptions, 'avoidTDZ'|'banner'|'charset'|'define'|'footer'|'keepNames'|'pure'|'target'|'treeShaking'|'tsconfigRaw'>;
+
+export interface Options extends Allow {
+	/** @default 'tsconfig.json' */
+	tsconfig?: string;
+	/** @default 'error' */
+	loglevel?: TransformOptions['logLevel'];
+	/** @default true */
+	sourcemap?: boolean | 'inline';
+	/** @default {} */
+	define?: Definitions;
+	/** @default 'utf8' */
+	charset?: TransformOptions['charset'];
+}
+
+interface ProcessorInput {
+	content: string;
+	attributes: Record<string, string | boolean>;
+	filename?: string;
+}
+
+// ---
+
+let service: Service | null;
 let boot = startService().then(x => { service = x });
 
-/**
- * @typedef Config
- * @type {import('esbuild').TransformOptions}
- */
-
-/** @returns {never} */
-function bail(err, ...args) {
+function bail(err: Error, ...args: (string|number)[]): never {
 	console.error('[esbuild]', ...args);
 	console.error(err.stack || err);
 	process.exit(1);
 }
 
-async function transform(input, options) {
-	let config = { ...options, sourcefile: input.filename };
+async function transform(input: ProcessorInput, options: TransformOptions): Promise<Processed> {
+	let config = { ...options };
+	if (input.filename) config.sourcefile = input.filename;
 	let output = await service.transform(input.content, config);
 
 	// TODO: log output.warnings
@@ -29,11 +54,7 @@ async function transform(input, options) {
 	};
 }
 
-/**
- * @param {Config} config
- * @returns {import('svelte/types/compiler/preprocess').PreprocessorGroup}
- */
-function esbuilder(config, typescript = false) {
+function esbuilder(config: TransformOptions, typescript = false): PreprocessorGroup {
 	const { define } = config;
 
 	return {
@@ -50,11 +71,9 @@ function esbuilder(config, typescript = false) {
 	};
 }
 
-/**
- * @param {Config & { loglevel?: import('esbuild').LogLevel, tsconfig?: string }} [options]
- */
-export function typescript(options={}) {
-	let { tsconfig, loglevel='error', ...config } = options;
+/** @note Use `options.define` for replacements */
+export function typescript(options: Options = {}): PreprocessorGroup {
+	let { tsconfig, loglevel='error', ...config } = options as Options & TransformOptions;
 
 	config = {
 		charset: 'utf8',
@@ -70,7 +89,7 @@ export function typescript(options={}) {
 	if (config.tsconfigRaw) {
 		// do nothing
 	} else {
-		let contents;
+		let contents: Record<string, any>;
 		let file = resolve(tsconfig || 'tsconfig.json');
 		try {
 			contents = require(file);
@@ -94,8 +113,8 @@ export function typescript(options={}) {
 	return esbuilder(config, true);
 }
 
-/** @param {Record<string, string>} [dict] */
-export function replace(dict={}) {
+/** @important Only works with JavaScript! */
+export function replace(dict: Definitions = {}): PreprocessorGroup {
 	for (let key in dict) {
 		dict[key] = String(dict[key]);
 	}
