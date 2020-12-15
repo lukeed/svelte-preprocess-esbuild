@@ -22,7 +22,7 @@ An example `rollup.config.js`, that uses this plugin alongside [`svelte-preproce
 
 > **Important:** When using `svelte-preprocess` (autoprecessor), you must pass `false` to its `typescript` option. Otherwise, your TypeScript `<script>`s will be compiled twice!
 
-Please note that this is _not_ a complete Rollup configuration! Refer to [`rollup-plugin-svelte`](https://github.com/sveltejs/rollup-plugin-svelte) for more documentation.
+Please note that this is _not_ a complete Rollup configuration! <br>Refer to [`rollup-plugin-svelte`](https://github.com/sveltejs/rollup-plugin-svelte) for more documentation.
 
 ```js
 // rollup.config.js
@@ -80,7 +80,7 @@ module.exports = {
 
 A limited subset of [`esbuild.TransformOptions`](https://github.com/evanw/esbuild/blob/master/lib/types.ts#L126) is supported. These values are forced (for compatbility and/or reliability): `minify`, `loader`, `format`, and `errorLimit`.
 
-Please the exported `Options` interface for the full configuration object.
+Please see the exported [`Options` interface](https://github.com/lukeed/svelte-preprocess-esbuild/blob/master/src/index.ts#L17) for the full detail.
 
 Below is the _only_ option that this plugin adds:
 
