@@ -24,7 +24,7 @@ jobs:
       run: nyc --include=src npm test
 
     - name: Report
-      if: matrix.nodejs >= 12
+      if: matrix.nodejs >= 14
       run: |
         nyc report --reporter=text-lcov > coverage.lcov
         bash <(curl -s https://codecov.io/bash)
