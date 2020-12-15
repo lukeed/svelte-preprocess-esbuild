@@ -101,6 +101,7 @@ export function typescript(options: Options = {}): PreprocessorGroup {
 				return bail(err, 'Unable to load `tsconfig` file:', file);
 			}
 			console.warn('[esbuild] Attempted to autoload "tsconfig.json" – failed!');
+			contents = { extends: true };
 		}
 
 		if (contents.compilerOptions) {
