@@ -16,28 +16,36 @@ function bail(err, ...args) {
 	process.exit(1);
 }
 
+async function transform(input, options) {
+	let config = { ...options, sourcefile: input.filename };
+	let output = await service.transform(input.content, config);
+
+	// TODO: log output.warnings
+	console.log(output.warnings);
+
+	return {
+		code: output.code,
+		map: output.map,
+	};
+}
+
 /**
  * @param {Config} config
  * @returns {import('svelte/types/compiler/preprocess').PreprocessorGroup}
  */
-function esbuilder(config, isTypescript = false) {
+function esbuilder(config, typescript = false) {
+	const { define } = config;
+
 	return {
 		async script(input) {
 			if (!service) await boot;
 
 			let { lang } = input.attributes;
-			let bool = (lang === 'ts' || lang === 'typescript');
-			if (bool !== isTypescript) return { code: input.content };
+			let isTypescript = (lang === 'ts' || lang === 'typescript');
+			if (!isTypescript && define) return transform(input, { define, loader: 'js' });
+			if (isTypescript !== typescript) return { code: input.content };
 
-			let sourcefile = input.filename;
-			let output = await service.transform(input.content, { ...config, sourcefile });
-
-			// TODO: log output.warnings
-
-			return {
-				code: output.code,
-				map: output.map,
-			};
+			return transform(input, config);
 		}
 	};
 }
