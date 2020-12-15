@@ -49,12 +49,12 @@ export function typescript(options={}) {
 	let { tsconfig, loglevel='error', ...config } = options;
 
 	config = {
-		format: 'esm',
 		charset: 'utf8',
 		logLevel: loglevel,
 		sourcemap: true,
 		...config,
 		loader: 'ts',
+		format: 'esm',
 		minify: false,
 		errorLimit: 0,
 	};
@@ -78,8 +78,6 @@ export function typescript(options={}) {
 
 		if (contents.compilerOptions) {
 			config.tsconfigRaw = { compilerOptions: contents.compilerOptions };
-			if (contents.compilerOptions.module === 'commonjs') config.format = 'cjs';
-		} else {
 			console.warn('[esbuild] Missing `compilerOptions` configuration – skip!');
 		}
 	}
