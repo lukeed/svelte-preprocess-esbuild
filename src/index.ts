@@ -57,7 +57,7 @@ async function decide() {
 
 const isExternal = /^(https?:)?\/\//;
 const isString = (x: unknown): x is string => typeof x === 'string';
-const IMPORTS = /import(?:["'\s]*([\w*{}\n,\r\s\t]+)from\s*)?["'\s].*([@\w/_-]+)["'\s].*/g;
+const IMPORTS = /import(?![\n\r\s\t]+type)(?:["'\s]*([\w*{}\n,\r\s\t]+)from\s*)?["'\s].*([@\w/_-]+)["'\s].*/g;
 
 function isTypescript(attrs: Attributes): boolean | void {
 	if (isString(attrs.lang)) return /^(ts|typescript)$/.test(attrs.lang);
