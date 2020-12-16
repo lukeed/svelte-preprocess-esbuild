@@ -2,18 +2,6 @@
 
 > A Svelte Preprocessor to compile TypeScript via [`esbuild`](https://github.com/evanw/esbuild)!
 
----
-
-**CURRENTLY BROKEN**
-
-I thought I extracted enough of my PoC – apparently not. <br>
-As it stands, `esbuild` strips _all component imports_ via treeshaking, resulting in broken build(s) <br>
-...unless you _only_ have a single `App.svelte` component 😉
-
-> _Tracking Issue: https://github.com/evanw/esbuild/issues/604_
-
----
-
 
 ## Install
 
