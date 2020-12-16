@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "svelte-preprocess-esbuild",
   "repository": "lukeed/svelte-preprocess-esbuild",
   "description": "A Svelte Preprocessor to compile TypeScript via esbuild",
