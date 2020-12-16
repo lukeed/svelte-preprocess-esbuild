@@ -104,7 +104,7 @@ async function transform(input: ProcessorInput, options: TransformOptions): Prom
 }
 
 /** @note Use `options.define` for replacements */
-export function typescript(options: Options = {}): PreprocessorGroup {
+export function typescript(options: Partial<Options> = {}): PreprocessorGroup {
 	let { tsconfig, loglevel='error', ...config } = options as Options & TransformOptions;
 
 	config = {
