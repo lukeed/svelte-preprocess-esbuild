@@ -57,6 +57,7 @@ async function decide() {
 
 const isExternal = /^(https?:)?\/\//;
 const isString = (x: unknown): x is string => typeof x === 'string';
+const IMPORTS = /import(?:["'\s]*([\w*{}\n,\r\s\t]+)from\s*)?["'\s].*([@\w/_-]+)["'\s].*/g;
 
 function isTypescript(attrs: Attributes): boolean | void {
 	if (isString(attrs.lang)) return /^(ts|typescript)$/.test(attrs.lang);
@@ -89,6 +90,8 @@ async function transform(input: ProcessorInput, options: TransformOptions): Prom
 		}
 	}
 
+	let imports = input.content.match(IMPORTS);
+	let preprend = Array.isArray(imports) ? imports.join('\n') : '';
 	let output = await (service || esbuild).transform(input.content, config);
 
 	// TODO: format output.warnings
@@ -97,7 +100,7 @@ async function transform(input: ProcessorInput, options: TransformOptions): Prom
 	}
 
 	return {
-		code: output.code,
+		code: preprend + output.code.replace(IMPORTS, ''),
 		dependencies: deps,
 		map: output.map,
 	};
