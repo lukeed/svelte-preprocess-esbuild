@@ -91,7 +91,7 @@ async function transform(input: ProcessorInput, options: TransformOptions): Prom
 	}
 
 	let imports = input.content.match(IMPORTS);
-	let preprend = Array.isArray(imports) ? imports.join('\n') : '';
+	let preprend = Array.isArray(imports) ? (imports.join('\n')+'\n') : '';
 	let output = await (service || esbuild).transform(input.content, config);
 
 	// TODO: format output.warnings
