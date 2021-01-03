@@ -2,59 +2,6 @@
 
 > A Svelte Preprocessor to compile TypeScript via [`esbuild`](https://github.com/evanw/esbuild)!
 
-***Gotchas***
-
-Currently, you cannot have variables using the same _basename_ as an imported file. In other words, if you import a `data.ts` file into your component, any other `data` variables will be rewritten to a different _local_ identifier. Here's an example:
-
-```svelte
-<script lang="ts">
-  import { count } from './data';
-  export let data = count;
-</script>
-
-<div class="counter">
-  <button on:click={() => data--}> - </button>
-  <span>{ data }</span>
-  <button on:click={() => data++}> + </button>
-</div>
-```
-
-This is rewritten into:
-
-```svelte
-<script>
-  import { count } from './data';
-  let data2 = count;
-  export {
-    data2 as data
-  };
-</script>
-
-<div class="counter">
-  <button on:click={() => data--}> - </button>
-  <span>{ data }</span>
-  <button on:click={() => data++}> + </button>
-</div>
-```
-
-> Notice the template still expects `data` – but only `data2` is available locally within the script.
-
-This is **not** limited to to exported properties. Any local variables – including references and reactive _statements_ are vulernable to this. However, reactive _assignments_ are not exposed to this:
-
-```js
-import { count } from './data';
-export let value = foo;
-
-// SAFE - does not rewrite
-$: data = value * 3;
-
-// BROKEN - rewrites to `data2`
-let data;
-$: {
-  data = value * 3;
-}
-```
-
 
 ## Install
 
