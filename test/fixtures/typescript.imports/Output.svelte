@@ -1,9 +1,10 @@
-<script lang="ts">import Counter from './Counter.svelte';
-import { capitalize } from './utils';
+<script lang="ts">import Counter from "./Counter.svelte";
+import {capitalize} from "./utils";
 import {
-		hello, world,
-		howdy
-	} from 'foobar';
+  hello,
+  world,
+  howdy
+} from "foobar";
 let name = "hello";
 const value = hello() + world();
 export {

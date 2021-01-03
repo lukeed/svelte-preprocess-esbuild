@@ -35,6 +35,9 @@ interface ProcessorInput {
 
 type Attributes = Record<string, string | boolean>;
 
+type Negate<U, T> = U extends T ? never : U;
+type TSConfig = Negate<TransformOptions['tsconfigRaw'], string> & { extends?: boolean };
+
 // ---
 
 let decided = false;
@@ -57,7 +60,6 @@ async function decide() {
 
 const isExternal = /^(https?:)?\/\//;
 const isString = (x: unknown): x is string => typeof x === 'string';
-const IMPORTS = /import(?![\n\r\s\t]+type)(?:["'\s]*([\w*{}\n,\r\s\t]+)from\s*)?["'\s].*([@\w/_-]+)["'\s].*/g;
 
 function isTypescript(attrs: Attributes): boolean | void {
 	if (isString(attrs.lang)) return /^(ts|typescript)$/.test(attrs.lang);
@@ -90,8 +92,6 @@ async function transform(input: ProcessorInput, options: TransformOptions): Prom
 		}
 	}
 
-	let imports = input.content.match(IMPORTS);
-	let preprend = Array.isArray(imports) ? (imports.join('\n')+'\n') : '';
 	let output = await (service || esbuild).transform(input.content, config);
 
 	// TODO: format output.warnings
@@ -100,7 +100,7 @@ async function transform(input: ProcessorInput, options: TransformOptions): Prom
 	}
 
 	return {
-		code: preprend + output.code.replace(IMPORTS, ''),
+		code: output.code,
 		dependencies: deps,
 		map: output.map,
 	};
@@ -121,11 +121,12 @@ export function typescript(options: Partial<Options> = {}): PreprocessorGroup {
 		errorLimit: 0,
 	};
 
+	let contents: TSConfig;
 	if (config.tsconfigRaw) {
-		// do nothing
+		contents = config.tsconfigRaw as TSConfig;
 	} else {
-		let contents: Record<string, any>;
 		let file = resolve(tsconfig || 'tsconfig.json');
+
 		try {
 			contents = require(file);
 		} catch (err) {
@@ -136,15 +137,18 @@ export function typescript(options: Partial<Options> = {}): PreprocessorGroup {
 				return bail(err, 'Unable to load `tsconfig` file:', file);
 			}
 			console.warn('[esbuild] Attempted to autoload "tsconfig.json" – failed!');
-			contents = { extends: true };
-		}
-
-		if (contents.compilerOptions) {
-			config.tsconfigRaw = { compilerOptions: contents.compilerOptions };
-		} else if (!contents.extends) {
-			console.warn('[esbuild] Missing `compilerOptions` configuration – skip!');
+			contents = { extends: true }; // ignore "no compilerOptions" warning
 		}
 	}
+
+	if (!contents.compilerOptions && !contents.extends) {
+		console.warn('[esbuild] Missing `compilerOptions` configuration – skip!');
+	}
+
+	let compilerOptions = { ...contents.compilerOptions };
+	// @see https://github.com/evanw/esbuild/releases/tag/v0.8.28
+	compilerOptions.importsNotUsedAsValues = 'preserve';
+	config.tsconfigRaw = { compilerOptions };
 
 	const define = config.define;
 
