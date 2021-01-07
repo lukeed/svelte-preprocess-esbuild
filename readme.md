@@ -20,7 +20,7 @@ You can use `svelte-preprocess-esbuild` alongside `svelte-preprocess`!
 
 An example `rollup.config.js`, that uses this plugin alongside [`svelte-preprocess`](https://github.com/sveltejs/svelte-preprocess).
 
-> **Important:** When using `svelte-preprocess` (autoprecessor), you must pass `false` to its `typescript` option. Otherwise, your TypeScript `<script>`s will be compiled twice!
+> **Important:** When using `svelte-preprocess` (autopreprocessor), you must pass `false` to its `typescript` option. Otherwise, your TypeScript `<script>`s will be compiled twice!
 
 Please note that this is _not_ a complete Rollup configuration! <br>Refer to [`rollup-plugin-svelte`](https://github.com/sveltejs/rollup-plugin-svelte) for more documentation.
 
