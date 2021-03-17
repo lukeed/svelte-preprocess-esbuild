@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "node bin",
-    "pretest": "tsc src/index.ts --noEmit",
+    "pretest": "tsc src/index.ts --noEmit  --allowSyntheticDefaultImports",
     "test": "uvu test -i \"register|fixtures\" -r test/register"
   },
   "engines": {

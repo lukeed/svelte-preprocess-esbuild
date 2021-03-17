@@ -39,7 +39,7 @@ function timer() {
 	console.log('~> created "%s" file (%s)', outfile, t());
 
 	t = timer(); // types
-	await run(`yarn tsc src/index.ts -d --declarationDir . --emitDeclarationOnly`);
+	await run(`yarn tsc src/index.ts -d --declarationDir . --emitDeclarationOnly --allowSyntheticDefaultImports`);
 	console.log('~> created "%s" file (%s)', pkg.types, t());
 })().catch(err => {
 	console.error('ERROR', err.stack || err);

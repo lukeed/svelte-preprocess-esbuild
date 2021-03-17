@@ -1,6 +1,6 @@
 import { readFile, existsSync } from 'fs';
 import { dirname, resolve } from 'path';
-import * as esbuild from 'esbuild';
+import esbuild from 'esbuild';
 import { promisify } from 'util';
 
 const read = promisify(readFile);
