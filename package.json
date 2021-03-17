@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@types/node": "14.14.13",
-    "esbuild": "^0.9.2",
+    "esbuild": "^0.9.3",
     "premove": "3.0.1",
     "rewrite-imports": "2.0.3",
     "svelte": "3.31.0",
