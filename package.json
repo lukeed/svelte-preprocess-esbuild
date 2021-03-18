@@ -3,8 +3,7 @@
   "name": "svelte-preprocess-esbuild",
   "repository": "lukeed/svelte-preprocess-esbuild",
   "description": "A Svelte Preprocessor to compile TypeScript via esbuild",
-  "module": "dist/index.mjs",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "types": "index.d.ts",
   "license": "MIT",
   "author": {
@@ -21,10 +20,7 @@
     "node": ">=10"
   },
   "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
-    },
+    ".": "./dist/index.cjs",
     "./package.json": "./package.json"
   },
   "files": [

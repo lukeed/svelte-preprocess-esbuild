@@ -21,20 +21,19 @@ function timer() {
 }
 
 (async function () {
-	let outfile = pkg.exports['.'].import;
+	let outfile = pkg.exports['.'];
 	let outdir = dirname(outfile);
 	await premove(pkg.types);
 	await premove(outdir);
 
 	let t = timer(); // esm
 	await run(`yarn esbuild src/index.ts --outfile=${outfile} --format=esm --platform=node --charset=utf8`);
-	console.log('~> created "%s" file (%s)', outfile, t());
+	console.log('~> compiled "src/index.ts" (%s)', t());
 
 	t = timer(); // cjs
-	let output = await read(outfile, 'utf8');
 	await write(
-		outfile = pkg.exports['.'].require,
-		imports(output).replace('export {', 'module.exports = {')
+		outfile, // overwrite self
+		imports(await read(outfile, 'utf8')).replace('export {', 'module.exports = {')
 	);
 	console.log('~> created "%s" file (%s)', outfile, t());
 
