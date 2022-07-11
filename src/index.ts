@@ -128,8 +128,8 @@ export function typescript(options: Partial<Options> = {}): PreprocessorGroup {
 	}
 
 	let compilerOptions = { ...contents.compilerOptions };
-	// @see https://github.com/evanw/esbuild/releases/tag/v0.8.28
-	compilerOptions.importsNotUsedAsValues = 'preserve';
+	// @see https://github.com/evanw/esbuild/releases/tag/v0.14.0
+	compilerOptions.preserveValueImports = true;
 	config.tsconfigRaw = { compilerOptions };
 
 	const define = config.define;

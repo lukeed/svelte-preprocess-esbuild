@@ -28,7 +28,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "esbuild": ">=0.9.0",
+    "esbuild": ">=0.14.0",
     "svelte": ">=3.5.0"
   },
   "devDependencies": {
