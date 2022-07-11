@@ -1,4 +1,4 @@
-<script lang="ts">import {count} from "./data";
+<script lang="ts">import { count } from "./data";
 $:
   data = count + 1;
 </script>

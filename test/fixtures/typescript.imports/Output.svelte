@@ -1,5 +1,5 @@
 <script lang="ts">import Counter from "./Counter.svelte";
-import {capitalize} from "./utils";
+import { capitalize } from "./utils";
 import {
   hello,
   world,
