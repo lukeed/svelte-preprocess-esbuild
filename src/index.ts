@@ -129,6 +129,7 @@ export function typescript(options: Partial<Options> = {}): PreprocessorGroup {
 
 	let compilerOptions = { ...contents.compilerOptions };
 	// @see https://github.com/evanw/esbuild/releases/tag/v0.14.0
+	compilerOptions.importsNotUsedAsValues = 'preserve';
 	compilerOptions.preserveValueImports = true;
 	config.tsconfigRaw = { compilerOptions };
 
